@@ -173,6 +173,31 @@ func (c *Client) Upload(key, bucket string, data []byte, ACL string) (fileUrl st
 	return full, nil
 }
 
+//	Delete file
+//	File key
+//	Bucket name
+//	Return nil if succeeded
+func (c *Client) Delete(key, bucket string) (err error) {
+	url := c.keyURL(bucket, key)
+	req, _ := http.NewRequest("DELETE", url, nil)
+	req.Header.Set("Date", time.Now().UTC().Format(http.TimeFormat))
+	c.Auth.SignRequest(req)
+	httpClient := &http.Client{}
+	res, err := httpClient.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	defer res.Body.Close()
+	_, readErr := ioutil.ReadAll(res.Body)
+
+	if readErr != nil {
+		fmt.Println(readErr)
+		return readErr
+	}
+	return nil
+}
+
 //to download form s3
 func (c *Client) Download(bucket string, key string) []byte {
 
