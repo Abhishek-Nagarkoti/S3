@@ -37,16 +37,16 @@ type Auth struct {
 	SecretAccessKey string
 
 	// Hostname is the S3 hostname to use.
-	// If empty, the standard US region of "s3.amazonaws.com" is
+	// If empty, the standard US region of "s3-us-west-2.amazonaws.com" is
 	// used.
 	Hostname string
 }
 
-const standardUSRegionAWS = "s3.amazonaws.com"
+const standardUSRegionAWS = "s3-us-west-2.amazonaws.com"
 
 func (a *Auth) hostname() string {
 	if a.Hostname != "" {
-		return a.Hostname
+		return "s3-" + a.Hostname + ".amazonaws.com"
 	}
 	return standardUSRegionAWS
 }
